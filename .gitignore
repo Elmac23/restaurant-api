@@ -1,5 +1,4 @@
-node_modules
-# Keep environment variables out of version control
-.env
-dist
-data/*.json
+server/node_modules
+server/.env
+server/dist
+server/data/*.json
