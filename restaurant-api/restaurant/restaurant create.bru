@@ -1,0 +1,20 @@
+meta {
+  name: restaurant create
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:5000/restaurants/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Amongus",
+    "city": "Wrocłwa",
+    "address": "Tania 60",
+    "phoneNumber": "12321345"
+  }
+}
