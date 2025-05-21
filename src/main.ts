@@ -13,19 +13,20 @@ import { AppConfig } from "./features/config/appConfig.js";
 import { AuthController } from "./features/auth/auth.controller.js";
 import { Authentication } from "./features/auth/auth.middleware.js";
 import { OrderController } from "./features/order/order.controller.js";
+import { AppDatabase } from "./db/AppDatabase.js";
 
 config();
 
 class Server {
   private _server: Express.Application;
-  private _db: JsonDB;
+  private _appDatabase: AppDatabase;
   constructor() {
-    this._db = new JsonDB(new Config("data/db", true, false, "/"));
-
     const authentication = container.resolve(Authentication);
     const config = container.resolve(AppConfig).getConfig();
-    console.log(config);
-    container.registerInstance(JsonDB, this._db);
+
+    const jsonDb = new JsonDB(new Config(config.DB_PATH, true, false, "/"));
+    this._appDatabase = new AppDatabase(jsonDb);
+    container.registerInstance(JsonDB, this._appDatabase.getDb());
     const restaurantController = container.resolve(RestaurantController);
     const dishesController = container.resolve(DishController);
     const drinksController = container.resolve(DrinkController);
@@ -50,6 +51,7 @@ class Server {
   run = async (port: number = 5000) => {
     this._server.listen(port, async () => {
       try {
+        this._appDatabase.initDb();
         console.log(`Server is running on http://localhost:${port}`);
       } catch (error) {
         console.error(error);
