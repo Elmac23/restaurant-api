@@ -1,4 +1,0 @@
-{
-  "watch": ["dist"],
-  "ignore": ["data/*.json"]
-}
