@@ -1,0 +1,20 @@
+meta {
+  name: create
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:5000/drinks/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Fanta",
+    "description": "fizzy monkey",
+    "price": 5,
+    "kcal": 90
+  }
+}
