@@ -6,6 +6,7 @@ import { injectable } from "tsyringe";
 import { tryOrNull, tryOrNullAsync } from "../../lib/tryOrNull.js";
 import IRepository from "../../lib/IRepository.js";
 import { NotFoundError } from "../../lib/errors/NotFoundError.js";
+import { BadRequestError } from "../../lib/errors/BadRequestError.js";
 
 @injectable()
 export class UserRepository implements IRepository<User> {
@@ -19,6 +20,9 @@ export class UserRepository implements IRepository<User> {
   }
 
   async create(user: User) {
+    const isUniqueEmail = await this.isUniqueEmail(user.email);
+    if (!isUniqueEmail)
+      throw new BadRequestError(`User with email ${user.email} already exists`);
     await this._db.push("/users[]", user);
     return await this.get(user.id);
   }
@@ -27,6 +31,12 @@ export class UserRepository implements IRepository<User> {
     const users = await tryOrNullAsync(() => this._db.getData(`/users`));
 
     return users?.find((r: User) => r.id === id);
+  }
+
+  private async isUniqueEmail(email: string) {
+    const userIsWithGivenEmail = await this.getByEmail(email);
+    console.log(!userIsWithGivenEmail);
+    return !userIsWithGivenEmail;
   }
 
   async getByEmail(email: string) {

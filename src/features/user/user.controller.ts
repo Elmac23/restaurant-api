@@ -56,6 +56,7 @@ export class UserController extends BaseController {
 
   createUser = async (req: Request<any, any, CreateUser>, res: Response) => {
     const user = req.body;
+
     const result = await this._userService.createUser(user);
     res.status(200).json(result);
   };
