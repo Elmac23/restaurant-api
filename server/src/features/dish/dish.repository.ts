@@ -35,14 +35,15 @@ export class DishRepository
     return dishes?.find((d: Dish) => d.id === id);
   }
 
-  async update(id: string, Dish: UpdateDish) {
+  async update(id: string, dish: UpdateDish) {
     const dishes = await tryOrNull(() => this._db.getData("/dishes"));
+    console.log(dish);
 
     if (!dishes.find((r: Dish) => r.id === id))
       throw new NotFoundError(`Dish with id ${id} not found`);
 
     const updated = dishes.map((r: Dish) => {
-      if (r.id === id) return { ...r, ...Dish };
+      if (r.id === id) return { ...r, ...dish };
       else return r;
     });
     await this._db.push("/dishes", updated, true);

@@ -35,7 +35,7 @@ export class AuthService {
     const id = uuid();
     const password = user.password;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const data: User = { ...user, id, hashedPassword, role: "user" };
+    const data: User = { ...user, id, hashedPassword, role: "admin" };
     await this._userRepository.create(data);
     return await this.login(user.email, password);
   }

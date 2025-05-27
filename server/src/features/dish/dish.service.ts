@@ -4,6 +4,7 @@ import { injectable } from "tsyringe";
 import { v4 as uuid } from "uuid";
 import { DishRepository } from "./dish.repository.js";
 import { CreateDish, UpdateDish } from "./dish.schema.js";
+import { WithFilePath } from "../../lib/WithFilePath.js";
 
 @injectable()
 export class DishService {

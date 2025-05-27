@@ -14,6 +14,7 @@ import { AuthController } from "./features/auth/auth.controller.js";
 import { Authentication } from "./features/auth/auth.middleware.js";
 import { OrderController } from "./features/order/order.controller.js";
 import { AppDatabase } from "./db/AppDatabase.js";
+import { FileUpload } from "./file-upload/fileUpload.js";
 
 config();
 
@@ -23,6 +24,7 @@ class Server {
   constructor() {
     const authentication = container.resolve(Authentication);
     const config = container.resolve(AppConfig).getConfig();
+    const fileUpload = container.resolve(FileUpload);
 
     const jsonDb = new JsonDB(new Config(config.DB_PATH, true, false, "/"));
     this._appDatabase = new AppDatabase(jsonDb);
@@ -36,15 +38,24 @@ class Server {
 
     this._server = Express();
     this._server.use(bodyParser.json());
+    this._server.use(Express.urlencoded({ extended: true }));
 
     this._server.use(logBodyMiddleware);
     this._server.use(authentication.authenticationMiddleware);
-    this._server.use("/restaurants", restaurantController.getRouter());
-    this._server.use("/dishes", dishesController.getRouter());
-    this._server.use("/drinks", drinksController.getRouter());
-    this._server.use("/orders", orderController.getRouter());
-    this._server.use("/users", userController.getRouter());
-    this._server.use("/auth", authController.getRouter());
+
+    const masterRouter = Express.Router();
+
+    masterRouter.use("/public", Express.static(config.PUBLIC_PATH));
+
+    masterRouter.use("/restaurants", restaurantController.getRouter());
+    masterRouter.use("/dishes", dishesController.getRouter());
+    masterRouter.use("/drinks", drinksController.getRouter());
+    masterRouter.use("/orders", orderController.getRouter());
+    masterRouter.use("/users", userController.getRouter());
+    masterRouter.use("/auth", authController.getRouter());
+
+    this._server.use("/api", masterRouter);
+
     this._server.use(errorHandling);
   }
 
