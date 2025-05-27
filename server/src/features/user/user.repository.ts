@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import { JsonDB } from "node-json-db";
-import { CreateUser, User, UpdateUser } from "./user.schema.js";
+import { CreateUser, User, UpdateUser, EditUser } from "./user.schema.js";
 import { injectable } from "tsyringe";
 import { tryOrNull, tryOrNullAsync } from "../../lib/tryOrNull.js";
 import IRepository from "../../lib/IRepository.js";
@@ -45,7 +45,7 @@ export class UserRepository implements IRepository<User> {
     return users?.find((r: User) => r.email === email);
   }
 
-  async update(id: string, user: UpdateUser) {
+  async update(id: string, user: EditUser) {
     const users = await tryOrNull(() => this._db.getData("/users"));
 
     if (!users.find((r: User) => r.id === id))

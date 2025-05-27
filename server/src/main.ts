@@ -15,6 +15,7 @@ import { Authentication } from "./features/auth/auth.middleware.js";
 import { OrderController } from "./features/order/order.controller.js";
 import { AppDatabase } from "./db/AppDatabase.js";
 import { FileUpload } from "./file-upload/fileUpload.js";
+import { MailSender } from "./features/mail-sender/mailSender.js";
 
 config();
 
@@ -25,6 +26,7 @@ class Server {
     const authentication = container.resolve(Authentication);
     const config = container.resolve(AppConfig).getConfig();
     const fileUpload = container.resolve(FileUpload);
+    const mailSender = container.resolve(MailSender);
 
     const jsonDb = new JsonDB(new Config(config.DB_PATH, true, false, "/"));
     this._appDatabase = new AppDatabase(jsonDb);

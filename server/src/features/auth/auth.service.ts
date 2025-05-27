@@ -9,12 +9,14 @@ import { ForbiddenError } from "../../lib/errors/ForbiddenError.js";
 import jwt from "jsonwebtoken";
 import { AppConfig } from "../config/appConfig.js";
 import { NotFoundError } from "../../lib/errors/NotFoundError.js";
+import { MailSender } from "../mail-sender/mailSender.js";
 
 @injectable()
 export class AuthService {
   constructor(
     private _userRepository: UserRepository,
-    private _config: AppConfig
+    private _config: AppConfig,
+    private _mailSender: MailSender
   ) {}
 
   async login(email: string, password: string) {
@@ -32,11 +34,45 @@ export class AuthService {
   }
 
   async register(user: RegisterUser) {
+    const { password, ...userWithoutPassword } = user;
     const id = uuid();
-    const password = user.password;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const data: User = { ...user, id, hashedPassword, role: "admin" };
+    const data: User = {
+      ...userWithoutPassword,
+      id,
+      hashedPassword,
+      role: "admin",
+    };
     await this._userRepository.create(data);
     return await this.login(user.email, password);
   }
+
+  requestChangePassword = async (email: string) => {
+    const user = await this._userRepository.getByEmail(email);
+    if (!user) throw new NotFoundError(`User with email ${email} not found`);
+    const { JWT_RESET_EXPIRES_IN, JWT_SECRET, HOST_URL } =
+      this._config.getConfig();
+    const token = jwt.sign({ email }, JWT_SECRET, {
+      expiresIn: JWT_RESET_EXPIRES_IN as any,
+    });
+    const url = HOST_URL + `/auth/reset-password?token=${token}`;
+    await this._mailSender.sendMail({
+      subject: "Reset password",
+      to: email,
+      text: `Please click on this link to reset your password: ${url}`,
+    });
+  };
+
+  changePassword = async (token: string, password: string) => {
+    const { email } = jwt.verify(
+      token,
+      this._config.getConfig().JWT_SECRET
+    ) as {
+      email: string;
+    };
+    const user = await this._userRepository.getByEmail(email);
+    if (!user) throw new NotFoundError(`User with email ${email} not found`);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await this._userRepository.update(user.id, { hashedPassword });
+  };
 }

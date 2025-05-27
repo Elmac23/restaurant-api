@@ -1,19 +1,18 @@
 meta {
-  name: login
+  name: req ch
   type: http
-  seq: 1
+  seq: 3
 }
 
 post {
-  url: http://localhost:5000/api/auth/login
+  url: http://localhost:5000/api/auth/request-change-password
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "email": "sakus04@wp.pl",
-    "password": "qwertyuiop"
+    "email": "sakus04@wp.pl"
   }
 }
 

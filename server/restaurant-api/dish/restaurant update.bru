@@ -5,13 +5,21 @@ meta {
 }
 
 patch {
-  url: http://localhost:5000/dishes/9fa6f1c4-7944-45ce-b73b-67bf70efed8e
-  body: json
+  url: http://localhost:5000/api/dishes/65ca73a0-c942-45b0-a6a5-0218785f0fb9
+  body: multipartForm
   auth: inherit
 }
 
 body:json {
   {
-    "description": "tha beste"
+    "description": "tha bestest"
   }
+}
+
+body:form-urlencoded {
+  image: 
+}
+
+body:multipart-form {
+  image: @file(C:\Users\sakus\Desktop\studia\9gjzs3.jpg)
 }

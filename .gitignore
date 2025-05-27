@@ -2,3 +2,4 @@ server/node_modules
 server/.env
 server/dist
 server/data/*.json
+server/public/images/image*
