@@ -12,12 +12,16 @@ import {
 import { CreateValidationMiddleware } from "../../middleware/CreateValidationMiddleware.js";
 import { NotFoundError } from "../../lib/errors/NotFoundError.js";
 import { Authentication } from "../auth/auth.middleware.js";
+import { AppConfig } from "../config/appConfig.js";
+import { FileUpload } from "../../file-upload/fileUpload.js";
 
 @injectable()
 export class DrinkController extends BaseController {
   constructor(
     private _drinkService: DrinkService,
-    private _authentication: Authentication
+    private _authentication: Authentication,
+    private _config: AppConfig,
+    private _fileUpload: FileUpload
   ) {
     super();
 
@@ -36,12 +40,14 @@ export class DrinkController extends BaseController {
     this._router.post(
       "/",
       adminGuard,
+      this._fileUpload.upload.single("image"),
       createDrinkValidationMiddleware,
       this.createDrink
     );
     this._router.patch(
       "/:id",
       adminGuard,
+      this._fileUpload.upload.single("image"),
       updateDrinkValidationMiddleware,
       this.updateDrink
     );
@@ -68,8 +74,17 @@ export class DrinkController extends BaseController {
   };
 
   createDrink = async (req: Request<any, any, CreateDrink>, res: Response) => {
+    const file = req.file;
+    const path =
+      (this._config.getValue("HOST_URL") as string) +
+      "/" +
+      (file?.path ?? "public/images/default_drink.png");
+    console.log(path);
     const drink = req.body;
-    const result = await this._drinkService.createDrink(drink);
+    const result = await this._drinkService.createDrink({
+      ...drink,
+      filePath: path,
+    });
     res.status(200).json(result);
   };
 
@@ -79,7 +94,16 @@ export class DrinkController extends BaseController {
   ) => {
     const id = req.params.id;
     const drink = req.body;
-    const result = await this._drinkService.updateDrink(id, drink);
+    const file = req.file;
+    let path: string | undefined = undefined;
+    if (file) {
+      path = (this._config.getValue("HOST_URL") as string) + "/" + file?.path;
+    }
+    const pathObj = path ? { filePath: path } : {};
+    const result = await this._drinkService.updateDrink(id, {
+      ...drink,
+      ...pathObj,
+    });
     res.status(200).json(result);
   };
 }

@@ -20,7 +20,9 @@ export class AppConfig {
       SMTP_HOST: process.env.SMTP_HOST,
       JWT_SECRET: process.env.JWT_SECRET,
       JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN,
+      JWT_RESET_EXPIRES_IN: process.env.JWT_RESET_EXPIRES_IN,
       CLIENT_URL: process.env.CLIENT_URL,
+      PUBLIC_PATH: process.env.PUBLIC_PATH,
       HOST_URL: process.env.HOST_URL,
       DB_PATH: process.env.DB_PATH,
     });

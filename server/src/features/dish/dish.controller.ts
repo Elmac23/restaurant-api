@@ -12,12 +12,16 @@ import {
 import { CreateValidationMiddleware } from "../../middleware/CreateValidationMiddleware.js";
 import { NotFoundError } from "../../lib/errors/NotFoundError.js";
 import { Authentication } from "../auth/auth.middleware.js";
+import { FileUpload } from "../../file-upload/fileUpload.js";
+import { AppConfig } from "../config/appConfig.js";
 
 @injectable()
 export class DishController extends BaseController {
   constructor(
     private _dishService: DishService,
-    private _authentication: Authentication
+    private _authentication: Authentication,
+    private _config: AppConfig,
+    private _fileUpload: FileUpload
   ) {
     super();
 
@@ -36,12 +40,14 @@ export class DishController extends BaseController {
     this._router.post(
       "/",
       adminGuard,
+      this._fileUpload.upload.single("image"),
       createDishValidationMiddleware,
       this.createDish
     );
     this._router.patch(
       "/:id",
       adminGuard,
+      this._fileUpload.upload.single("image"),
       updateDishValidationMiddleware,
       this.updateDish
     );
@@ -68,9 +74,17 @@ export class DishController extends BaseController {
   };
 
   createDish = async (req: Request<any, any, CreateDish>, res: Response) => {
-    console.log(req.body);
-    const restaurant = req.body;
-    const result = await this._dishService.createDish(restaurant);
+    const file = req.file;
+    const path =
+      (this._config.getValue("HOST_URL") as string) +
+      "/" +
+      (file?.path ?? "public/images/default_pizza.png");
+    console.log(path);
+    const dish = req.body;
+    const result = await this._dishService.createDish({
+      ...dish,
+      filePath: path,
+    });
     res.status(200).json(result);
   };
 
@@ -79,8 +93,17 @@ export class DishController extends BaseController {
     res: Response
   ) => {
     const id = req.params.id;
-    const restaurant = req.body;
-    const result = await this._dishService.updateDish(id, restaurant);
+    const dish = req.body;
+    const file = req.file;
+    let path: string | undefined = undefined;
+    if (file) {
+      path = (this._config.getValue("HOST_URL") as string) + "/" + file?.path;
+    }
+    const pathObj = path ? { filePath: path } : {};
+    const result = await this._dishService.updateDish(id, {
+      ...dish,
+      ...pathObj,
+    });
     res.status(200).json(result);
   };
 }

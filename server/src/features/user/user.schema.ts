@@ -41,3 +41,7 @@ export type User = Omit<CreateUser, "password"> & {
   id: string;
   hashedPassword: string;
 };
+
+export type EditUser = Omit<UpdateUser, "password"> & {
+  hashedPassword: string;
+};

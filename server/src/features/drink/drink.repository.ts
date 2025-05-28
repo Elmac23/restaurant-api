@@ -7,6 +7,7 @@ import { tryOrNull, tryOrNullAsync } from "../../lib/tryOrNull.js";
 import IRepository, { SearchOptions } from "../../lib/IRepository.js";
 import { NotFoundError } from "../../lib/errors/NotFoundError.js";
 import { BaseRepository } from "../../lib/base.repository.js";
+import { unlink } from "fs";
 
 @injectable()
 export class DrinkRepository

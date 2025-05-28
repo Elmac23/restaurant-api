@@ -9,7 +9,9 @@ export const configurationSchema = z.object({
   SMTP_HOST: z.string(),
   JWT_SECRET: z.string(),
   JWT_EXPIRES_IN: z.string(),
+  JWT_RESET_EXPIRES_IN: z.string(),
   CLIENT_URL: z.string(),
+  PUBLIC_PATH: z.string(),
   HOST_URL: z.string(),
   DB_PATH: z.string(),
 });

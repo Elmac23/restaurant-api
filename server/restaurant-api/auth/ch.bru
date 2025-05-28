@@ -1,0 +1,25 @@
+meta {
+  name: ch
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:5000/api/auth/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNha3VzMDRAd3AucGwiLCJpYXQiOjE3NDgzNjUwMjMsImV4cCI6MTc0ODM2NTkyM30.vVXfz5sTyvQUOTLhrjGlfrNcI2wIELDyhqG3XnjxtF0
+  body: json
+  auth: inherit
+}
+
+params:query {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNha3VzMDRAd3AucGwiLCJpYXQiOjE3NDgzNjUwMjMsImV4cCI6MTc0ODM2NTkyM30.vVXfz5sTyvQUOTLhrjGlfrNcI2wIELDyhqG3XnjxtF0
+}
+
+body:json {
+  {
+    "password": "qwertyuiop"
+  }
+}
+
+script:post-response {
+  bru.setEnvVar("access_token",res.body.access_token)
+}
