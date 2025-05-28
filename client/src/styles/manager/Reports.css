@@ -1,0 +1,399 @@
+/* Manager Reports CSS */
+.manager-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.manager-content h1 {
+  color: #2c3e50;
+  margin-bottom: 2rem;
+}
+
+.reports-controls {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.period-selector,
+.report-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.period-selector label,
+.report-selector label {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.period-selector select,
+.report-selector select {
+  padding: 0.5rem;
+  border: 2px solid #bdc3c7;
+  border-radius: 4px;
+  background-color: white;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.period-selector select:focus,
+.report-selector select:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+/* Sales Report Styles */
+.sales-report {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  border-left: 4px solid #3498db;
+}
+
+.summary-card.revenue {
+  border-left-color: #27ae60;
+  background: linear-gradient(135deg, #e8f8f5 0%, #d5f4e6 100%);
+}
+
+.summary-card.orders {
+  border-left-color: #3498db;
+  background: linear-gradient(135deg, #ebf3fd 0%, #d6eafc 100%);
+}
+
+.summary-card.avg-order {
+  border-left-color: #f39c12;
+  background: linear-gradient(135deg, #fef9e7 0%, #fcf3cf 100%);
+}
+
+.summary-card h3 {
+  margin: 0 0 1rem 0;
+  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.big-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0;
+  line-height: 1;
+}
+
+.summary-card small {
+  color: #7f8c8d;
+  font-size: 0.85rem;
+}
+
+.daily-breakdown {
+  margin-top: 2rem;
+}
+
+.daily-breakdown h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.sales-table {
+  overflow-x: auto;
+}
+
+.sales-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sales-table th,
+.sales-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.sales-table th {
+  background-color: #34495e;
+  color: white;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+}
+
+.sales-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.sales-table .revenue {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.sales-table .orders {
+  color: #3498db;
+  font-weight: 600;
+}
+
+.sales-table .avg {
+  color: #f39c12;
+  font-weight: 600;
+}
+
+/* Popular Items Report */
+.popular-report {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.popular-report h3 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.popular-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.popular-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #bdc3c7;
+  transition: transform 0.2s;
+}
+
+.popular-item:hover {
+  transform: translateX(5px);
+}
+
+.popular-item.dish {
+  border-left-color: #e67e22;
+}
+
+.popular-item.drink {
+  border-left-color: #3498db;
+}
+
+.item-rank {
+  background-color: #2c3e50;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-info h4 {
+  margin: 0 0 0.25rem 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.item-type {
+  background-color: #ecf0f1;
+  color: #7f8c8d;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.item-stats {
+  display: flex;
+  gap: 1rem;
+  text-align: right;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat .label {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  text-transform: uppercase;
+}
+
+.stat .value {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* Performance Report */
+.performance-report {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.performance-report h3 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.performance-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.metric-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  border-left: 4px solid #3498db;
+}
+
+.metric-card h4 {
+  margin: 0 0 1rem 0;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+}
+
+.metric-trend {
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 15px;
+}
+
+.metric-trend.good {
+  background-color: #d5f4e6;
+  color: #27ae60;
+}
+
+.metric-trend.neutral {
+  background-color: #f8f9fa;
+  color: #7f8c8d;
+}
+
+.staff-performance {
+  margin-top: 2rem;
+}
+
+.staff-performance h4 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.staff-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.staff-member {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 5px;
+  border-left: 3px solid #bdc3c7;
+}
+
+.staff-member .name {
+  font-weight: 500;
+  color: #2c3e50;
+  flex: 1;
+}
+
+.staff-member .performance {
+  color: #7f8c8d;
+  margin: 0 1rem;
+}
+
+.staff-member .rating {
+  padding: 0.25rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.rating.good {
+  background-color: #d5f4e6;
+  color: #27ae60;
+}
+
+.rating.average {
+  background-color: #fef9e7;
+  color: #f39c12;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .reports-controls {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .performance-metrics {
+    grid-template-columns: 1fr;
+  }
+  
+  .item-stats {
+    flex-direction: column;
+    text-align: left;
+  }
+  
+  .staff-member {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .staff-member .rating {
+    align-self: flex-end;
+  }
+}

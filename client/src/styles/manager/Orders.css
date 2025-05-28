@@ -1,0 +1,350 @@
+/* Manager Orders CSS */
+.manager-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.manager-header {
+  background-color: #2c3e50;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-email {
+  color: #ecf0f1;
+}
+
+.logout-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+.manager-container {
+  display: flex;
+  flex: 1;
+}
+
+.manager-sidebar {
+  width: 250px;
+  background-color: #34495e;
+  color: white;
+  padding: 1rem 0;
+}
+
+.manager-sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.manager-sidebar nav li {
+  margin: 0;
+}
+
+.manager-sidebar nav a {
+  display: block;
+  color: #bdc3c7;
+  text-decoration: none;
+  padding: 1rem 1.5rem;
+  transition: all 0.3s;
+}
+
+.manager-sidebar nav a:hover,
+.manager-sidebar nav a.active {
+  background-color: #2c3e50;
+  color: #3498db;
+}
+
+.manager-content {
+  flex: 1;
+  padding: 2rem;
+  background-color: #ecf0f1;
+}
+
+.manager-content h1 {
+  color: #2c3e50;
+  margin-bottom: 2rem;
+}
+
+/* Orders specific styles */
+.orders-controls {
+  margin-bottom: 2rem;
+}
+
+.status-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.status-filters button {
+  padding: 0.75rem 1rem;
+  border: 2px solid #3498db;
+  background-color: white;
+  color: #3498db;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.status-filters button:hover {
+  background-color: #3498db;
+  color: white;
+}
+
+.status-filters button.active {
+  background-color: #3498db;
+  color: white;
+}
+
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+.order-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #bdc3c7;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.order-card.status-pending {
+  border-left-color: #f39c12;
+}
+
+.order-card.status-preparing {
+  border-left-color: #3498db;
+}
+
+.order-card.status-ready {
+  border-left-color: #27ae60;
+}
+
+.order-card.status-delivered {
+  border-left-color: #95a5a6;
+}
+
+.order-card.status-cancelled {
+  border-left-color: #e74c3c;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.order-id {
+  font-weight: bold;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.order-status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 15px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.order-status.status-pending {
+  background-color: #ffeaa7;
+  color: #e17055;
+}
+
+.order-status.status-preparing {
+  background-color: #74b9ff;
+  color: white;
+}
+
+.order-status.status-ready {
+  background-color: #00b894;
+  color: white;
+}
+
+.order-status.status-delivered {
+  background-color: #636e72;
+  color: white;
+}
+
+.order-status.status-cancelled {
+  background-color: #d63031;
+  color: white;
+}
+
+.order-customer {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.order-customer strong {
+  display: block;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.order-customer p {
+  margin: 0.25rem 0;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.order-items {
+  margin-bottom: 1rem;
+}
+
+.order-items h4 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.order-items ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.order-items li {
+  padding: 0.25rem 0;
+  color: #34495e;
+  font-size: 0.9rem;
+}
+
+.order-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ecf0f1;
+}
+
+.order-total {
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.order-time {
+  color: #7f8c8d;
+  font-size: 0.85rem;
+}
+
+.order-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
+.btn-success {
+  background-color: #27ae60;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #1e8449;
+}
+
+.btn-danger {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #7f8c8d;
+}
+
+.empty-state p {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .manager-container {
+    flex-direction: column;
+  }
+  
+  .manager-sidebar {
+    width: 100%;
+  }
+  
+  .manager-sidebar nav ul {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .orders-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .status-filters {
+    justify-content: center;
+  }
+  
+  .order-actions {
+    justify-content: center;
+  }
+}
