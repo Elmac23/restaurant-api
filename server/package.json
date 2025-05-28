@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"tsc -w\" \"nodemon ./dist/main.js\""
+    "dev": "concurrently \"tsc -w\" \"nodemon ./dist/main.js\"",
+    "start": "tsc && node ./dist/main.js"
   },
   "keywords": [],
   "author": "",
