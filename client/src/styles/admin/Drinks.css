@@ -1,0 +1,81 @@
+/* Admin Drinks Styles - dziedziczy z Dishes i dodaje specyficzne style */
+@import './Dishes.css';
+
+.drinks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.drink-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.drink-card:hover {
+  transform: translateY(-2px);
+}
+
+.drink-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.drink-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.drink-description {
+  color: #666;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.drink-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.drink-category {
+  background-color: #e9ecef;
+  color: #495057;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.drink-volume {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.drink-price {
+  font-weight: bold;
+  color: #E94E1B;
+  font-size: 1.1rem;
+}
+
+.drink-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.drink-form {
+  display: grid;
+  gap: 1.5rem;
+}

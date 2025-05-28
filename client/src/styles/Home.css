@@ -1,0 +1,119 @@
+/* Globalne style */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+body {
+  background-color: #fff;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Header i banner */
+.header {
+  background-color: #fff;
+}
+
+.hero-banner {
+  background-color: #F7EDE2;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/restaurant-banner.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+.hero-banner .content {
+  padding: 0 20px;
+}
+
+.hero-banner h1 {
+  font-size: 42px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.hero-banner p {
+  font-size: 18px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Footer */
+.footer {
+  background-color: #333;
+  color: white;
+  padding: 60px 5% 30px;
+  margin-top: 50px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.footer-logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: #E94E1B;
+  margin-bottom: 30px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 60px;
+  flex-wrap: wrap;
+}
+
+.footer-column h4 {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.footer-column a {
+  display: block;
+  color: #ccc;
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+
+.footer-column p {
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+.footer-column a:hover {
+  color: white;
+}
+
+.footer-bottom {
+  padding-top: 30px;
+  border-top: 1px solid #444;
+  text-align: center;
+  color: #999;
+}
+
+/* Media queries dla responsywności */
+@media (max-width: 768px) {
+  .hero-banner h1 {
+    font-size: 32px;
+  }
+  
+  .footer-content {
+    flex-direction: column;
+  }
+  
+  .footer-links {
+    margin-top: 30px;
+    gap: 30px;
+  }
+}
