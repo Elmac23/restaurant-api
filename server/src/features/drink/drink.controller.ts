@@ -56,7 +56,7 @@ export class DrinkController extends BaseController {
   }
 
   getDrinks = async (req: Request, res: Response) => {
-    const drinks = await this._drinkService.getDrinks();
+    const drinks = await this._drinkService.getDrinks(req.query);
     res.status(200).json(drinks);
   };
 
@@ -79,7 +79,6 @@ export class DrinkController extends BaseController {
       (this._config.getValue("HOST_URL") as string) +
       "/" +
       (file?.path ?? "public/images/default_drink.png");
-    console.log(path);
     const drink = req.body;
     const result = await this._drinkService.createDrink({
       ...drink,

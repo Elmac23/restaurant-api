@@ -50,12 +50,12 @@ export class AuthService {
   requestChangePassword = async (email: string) => {
     const user = await this._userRepository.getByEmail(email);
     if (!user) throw new NotFoundError(`User with email ${email} not found`);
-    const { JWT_RESET_EXPIRES_IN, JWT_SECRET, HOST_URL } =
+    const { JWT_RESET_EXPIRES_IN, JWT_SECRET, HOST_URL, CLIENT_URL } =
       this._config.getConfig();
     const token = jwt.sign({ email }, JWT_SECRET, {
       expiresIn: JWT_RESET_EXPIRES_IN as any,
     });
-    const url = HOST_URL + `/auth/reset-password?token=${token}`;
+    const url = CLIENT_URL + `reset-password?token=${token}`;
     await this._mailSender.sendMail({
       subject: "Reset password",
       to: email,

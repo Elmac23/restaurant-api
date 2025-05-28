@@ -3,8 +3,9 @@ import "reflect-metadata";
 import { injectable } from "tsyringe";
 import { v4 as uuid } from "uuid";
 import { DishRepository } from "./dish.repository.js";
-import { CreateDish, UpdateDish } from "./dish.schema.js";
+import { CreateDish, Dish, UpdateDish } from "./dish.schema.js";
 import { WithFilePath } from "../../lib/WithFilePath.js";
+import { SearchOptions } from "../../lib/IRepository.js";
 
 @injectable()
 export class DishService {
@@ -13,8 +14,8 @@ export class DishService {
     this._dishRepository = dishRepository;
   }
 
-  async getDishes() {
-    return this._dishRepository.getAll();
+  async getDishes(options: SearchOptions<Dish> = {}) {
+    return this._dishRepository.getAll(options);
   }
 
   async getDish(id: string) {

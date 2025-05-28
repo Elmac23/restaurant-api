@@ -4,19 +4,23 @@ import { JsonDB } from "node-json-db";
 import { CreateUser, User, UpdateUser, EditUser } from "./user.schema.js";
 import { injectable } from "tsyringe";
 import { tryOrNull, tryOrNullAsync } from "../../lib/tryOrNull.js";
-import IRepository from "../../lib/IRepository.js";
+import IRepository, { SearchOptions } from "../../lib/IRepository.js";
 import { NotFoundError } from "../../lib/errors/NotFoundError.js";
 import { BadRequestError } from "../../lib/errors/BadRequestError.js";
+import { BaseRepository } from "../../lib/base.repository.js";
 
 @injectable()
-export class UserRepository implements IRepository<User> {
-  private _db: JsonDB;
-  constructor(db: JsonDB) {
-    this._db = db;
+export class UserRepository
+  extends BaseRepository
+  implements IRepository<User>
+{
+  constructor(private _db: JsonDB) {
+    super();
   }
 
-  async getAll() {
-    return await tryOrNull(() => this._db.getData("/users"));
+  async getAll(options: SearchOptions<User> = {}) {
+    const result = await tryOrNull(() => this._db.getData("/users"));
+    return this.withSearch(result, options);
   }
 
   async create(user: User) {
@@ -35,7 +39,6 @@ export class UserRepository implements IRepository<User> {
 
   private async isUniqueEmail(email: string) {
     const userIsWithGivenEmail = await this.getByEmail(email);
-    console.log(!userIsWithGivenEmail);
     return !userIsWithGivenEmail;
   }
 

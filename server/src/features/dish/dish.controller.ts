@@ -56,7 +56,7 @@ export class DishController extends BaseController {
   }
 
   getDishes = async (req: Request, res: Response) => {
-    const restaurats = await this._dishService.getDishes();
+    const restaurats = await this._dishService.getDishes(req.query);
     res.status(200).json(restaurats);
   };
 
@@ -79,7 +79,6 @@ export class DishController extends BaseController {
       (this._config.getValue("HOST_URL") as string) +
       "/" +
       (file?.path ?? "public/images/default_pizza.png");
-    console.log(path);
     const dish = req.body;
     const result = await this._dishService.createDish({
       ...dish,
