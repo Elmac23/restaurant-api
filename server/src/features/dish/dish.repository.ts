@@ -37,7 +37,6 @@ export class DishRepository
 
   async update(id: string, dish: UpdateDish) {
     const dishes = await tryOrNull(() => this._db.getData("/dishes"));
-    console.log(dish);
 
     if (!dishes.find((r: Dish) => r.id === id))
       throw new NotFoundError(`Dish with id ${id} not found`);

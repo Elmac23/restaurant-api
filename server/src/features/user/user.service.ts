@@ -1,9 +1,10 @@
 import "reflect-metadata";
 import { UserRepository } from "./user.repository.js";
-import { CreateUser, UpdateUser } from "./user.schema.js";
+import { CreateUser, UpdateUser, User } from "./user.schema.js";
 import { injectable } from "tsyringe";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
+import { SearchOptions } from "../../lib/IRepository.js";
 
 @injectable()
 export class UserService {
@@ -12,8 +13,8 @@ export class UserService {
     this._userRepository = userRepository;
   }
 
-  async getUsers() {
-    return this._userRepository.getAll();
+  async getUsers(options: SearchOptions<User> = {}) {
+    return this._userRepository.getAll(options);
   }
 
   async getUser(id: string) {
@@ -28,7 +29,7 @@ export class UserService {
   }
 
   async updateUser(id: string, user: UpdateUser) {
-    return this._userRepository.update(id, user);
+    return this._userRepository.update(id, user as any);
   }
 
   async deleteUser(id: string) {

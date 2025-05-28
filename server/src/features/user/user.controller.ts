@@ -11,13 +11,15 @@ import {
 } from "./user.schema.js";
 import { CreateValidationMiddleware } from "../../middleware/CreateValidationMiddleware.js";
 import { NotFoundError } from "../../lib/errors/NotFoundError.js";
+import { Authentication } from "../auth/auth.middleware.js";
 
 @injectable()
 export class UserController extends BaseController {
-  private _userService: UserService;
-  constructor(userService: UserService) {
+  constructor(
+    private _userService: UserService,
+    private _authentication: Authentication
+  ) {
     super();
-    this._userService = userService;
 
     const createUserValidationMiddleware = new CreateValidationMiddleware(
       createUserSchema
@@ -27,17 +29,33 @@ export class UserController extends BaseController {
       updateUserSchema
     ).getMiddleware();
 
+    const adminGuard = this._authentication.roleGuard("admin");
+
     this._router.get("/", this.getUsers);
-    this._router.post("/", createUserValidationMiddleware, this.createUser);
-    this._router.patch("/:id", updateUserValidationMiddleware, this.updateUser);
+    this._router.post(
+      "/",
+      adminGuard,
+      createUserValidationMiddleware,
+      this.createUser
+    );
+    this._router.patch(
+      "/:id",
+      this._authentication.isSelfOrAdminGuard,
+      updateUserValidationMiddleware,
+      this.updateUser
+    );
 
     this._router.get("/:id", this.getUserById);
 
-    this._router.delete("/:id", this.removeUserById);
+    this._router.delete(
+      "/:id",
+      this._authentication.isSelfOrAdminGuard,
+      this.removeUserById
+    );
   }
 
   getUsers = async (req: Request, res: Response) => {
-    const users = await this._userService.getUsers();
+    const users = await this._userService.getUsers(req.query);
     res.status(200).json(users);
   };
 
@@ -67,6 +85,7 @@ export class UserController extends BaseController {
   ) => {
     const id = req.params.id;
     const user = req.body;
+    if (req.user?.role !== "admin") delete user.role;
     const result = await this._userService.updateUser(id, user);
     res.status(200).json(result);
   };

@@ -3,7 +3,8 @@ import "reflect-metadata";
 import { injectable } from "tsyringe";
 import { v4 as uuid } from "uuid";
 import { DrinkRepository } from "./drink.repository.js";
-import { CreateDrink, UpdateDrink } from "./drink.schema.js";
+import { CreateDrink, Drink, UpdateDrink } from "./drink.schema.js";
+import { SearchOptions } from "../../lib/IRepository.js";
 
 @injectable()
 export class DrinkService {
@@ -12,8 +13,8 @@ export class DrinkService {
     this._drinkRepository = drinkRepository;
   }
 
-  async getDrinks() {
-    return this._drinkRepository.getAll();
+  async getDrinks(options: SearchOptions<Drink> = {}) {
+    return this._drinkRepository.getAll(options);
   }
 
   async getDrink(id: string) {

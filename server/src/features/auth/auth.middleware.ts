@@ -9,9 +9,7 @@ import { injectable } from "tsyringe";
 
 @injectable()
 export class Authentication {
-  constructor(private _config: AppConfig) {
-    console.log(this._config.getValue("JWT_SECRET"));
-  }
+  constructor(private _config: AppConfig) {}
   authenticationMiddleware = (
     req: Request,
     res: Response,
@@ -45,6 +43,13 @@ export class Authentication {
       }
       next();
     };
+  };
+
+  isSelfOrAdminGuard = (req: Request, res: Response, next: NextFunction) => {
+    if (req.params.id !== req.user?.id && req.user?.role !== "admin") {
+      throw new ForbiddenError("You are not authorized to do this action");
+    }
+    next();
   };
 }
 

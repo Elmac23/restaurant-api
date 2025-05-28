@@ -75,7 +75,6 @@ export class RestaurantController extends BaseController {
     req: Request<any, any, CreateRestaurant>,
     res: Response
   ) => {
-    console.log(req.body);
     const restaurant = req.body;
     const result = await this._restaurantService.createRestaurant(restaurant);
     res.status(200).json(result);
