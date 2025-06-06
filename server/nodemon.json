@@ -1,4 +1,4 @@
 {
-  "watch": ["dist"],
-  "ignore": ["data/*.json"]
+  "watch": ["src"],
+  "ignore": ["dist", "data", "public"]
 }

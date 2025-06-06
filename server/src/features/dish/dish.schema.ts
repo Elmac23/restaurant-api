@@ -3,20 +3,10 @@ import z from "zod";
 export const createDishSchema = z.object({
   name: z.string().min(2).max(100),
   description: z.string().min(2).max(300),
-  price: z.string().refine(
-    (v) => {
-      let n = Number(v);
-      return !isNaN(n) && v?.length > 0;
-    },
-    { message: "Invalid number" }
-  ),
-  kcal: z.string().refine(
-    (v) => {
-      let n = Number(v);
-      return !isNaN(n) && v?.length > 0;
-    },
-    { message: "Invalid number" }
-  ),
+  price: z.coerce.number().positive(),
+  kcal: z.coerce.number().nonnegative(),
+  categoryId: z.string().optional(),
+  available: z.boolean().optional(),
   filePath: z.string().optional(),
 });
 
@@ -24,26 +14,10 @@ export const updateDishSchema = z.object({
   name: z.string().min(2).max(100).optional(),
   description: z.string().min(2).max(300).optional(),
   filePath: z.string().optional(),
-  price: z
-    .string()
-    .refine(
-      (v) => {
-        let n = Number(v);
-        return !isNaN(n) && v?.length > 0;
-      },
-      { message: "Invalid number" }
-    )
-    .optional(),
-  kcal: z
-    .string()
-    .refine(
-      (v) => {
-        let n = Number(v);
-        return !isNaN(n) && v?.length > 0;
-      },
-      { message: "Invalid number" }
-    )
-    .optional(),
+  price: z.coerce.number().positive().optional(),
+  kcal: z.coerce.number().nonnegative().optional(),
+  categoryId: z.string().optional(),
+  available: z.boolean().optional(),
 });
 
 export type CreateDish = z.infer<typeof createDishSchema>;

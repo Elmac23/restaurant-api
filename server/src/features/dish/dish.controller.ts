@@ -56,8 +56,23 @@ export class DishController extends BaseController {
   }
 
   getDishes = async (req: Request, res: Response) => {
-    const restaurats = await this._dishService.getDishes(req.query);
-    res.status(200).json(restaurats);
+    const { name, category, categoryId, available } = req.query;
+    let dishes = await this._dishService.getDishes(req.query);
+    if (name) {
+      dishes = dishes.filter((d: any) =>
+        d.name.toLowerCase().includes((name as string).toLowerCase())
+      );
+    }
+    if (category || categoryId) {
+      const filterCategoryId = categoryId || category;
+      dishes = dishes.filter((d: any) => d.categoryId === filterCategoryId);
+    }
+    if (available !== undefined) {
+      dishes = dishes.filter(
+        (d: any) => String(d.available) === String(available)
+      );
+    }
+    res.status(200).json(dishes);
   };
 
   getDishById = async (req: Request<{ id: string }>, res: Response) => {
@@ -75,10 +90,9 @@ export class DishController extends BaseController {
 
   createDish = async (req: Request<any, any, CreateDish>, res: Response) => {
     const file = req.file;
-    const path =
-      (this._config.getValue("HOST_URL") as string) +
-      "/" +
-      (file?.path ?? "public/images/default_pizza.png");
+    const path = file 
+      ? `${this._config.getValue("HOST_URL")}/public/images/${file.filename}`
+      : `${this._config.getValue("HOST_URL")}/public/images/default_pizza.png`;
     const dish = req.body;
     const result = await this._dishService.createDish({
       ...dish,
@@ -96,7 +110,7 @@ export class DishController extends BaseController {
     const file = req.file;
     let path: string | undefined = undefined;
     if (file) {
-      path = (this._config.getValue("HOST_URL") as string) + "/" + file?.path;
+      path = `${this._config.getValue("HOST_URL")}/public/images/${file.filename}`;
     }
     const pathObj = path ? { filePath: path } : {};
     const result = await this._dishService.updateDish(id, {

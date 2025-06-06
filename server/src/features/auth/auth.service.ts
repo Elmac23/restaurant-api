@@ -41,7 +41,7 @@ export class AuthService {
       ...userWithoutPassword,
       id,
       hashedPassword,
-      role: "admin",
+      role: "klient", // domyślna rola
     };
     await this._userRepository.create(data);
     return await this.login(user.email, password);
@@ -55,7 +55,7 @@ export class AuthService {
     const token = jwt.sign({ email }, JWT_SECRET, {
       expiresIn: JWT_RESET_EXPIRES_IN as any,
     });
-    const url = CLIENT_URL + `reset-password?token=${token}`;
+    const url = CLIENT_URL + `/reset-password?token=${token}`;
     await this._mailSender.sendMail({
       subject: "Reset password",
       to: email,

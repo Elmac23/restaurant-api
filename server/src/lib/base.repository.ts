@@ -15,10 +15,13 @@ export class BaseRepository {
   }
 
   protected withSearch<T>(array: T[], search: SearchOptions<T>) {
-    return this.withLimit(
-      this.withFilter(array, search),
-      search.limit,
-      search.page
-    );
+    const filtered = this.withFilter(array, search);
+    
+    // Apply limit only if it's explicitly provided
+    if (search.limit !== undefined) {
+      return this.withLimit(filtered, search.limit, search.page);
+    }
+    
+    return filtered;
   }
 }
