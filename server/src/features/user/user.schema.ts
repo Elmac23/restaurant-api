@@ -2,30 +2,30 @@ import z from "zod";
 
 export const createUserSchema = z.object({
   email: z.string().email(),
-  name: z.string().min(2).max(100).optional(),
+  firstname: z.string().min(2).max(100).optional(),
   lastname: z.string().min(2).max(100).optional(),
   city: z.string().min(2).max(50),
   address: z.string().min(5).max(100),
   phoneNumber: z.string().min(8).max(16),
   password: z.string(),
-  role: z.enum(["user", "worker", "manager", "admin"]),
+  role: z.enum(["klient", "worker", "manager", "admin"]),
   restaurantId: z.string().optional(),
 });
 
 export const updateUserSchema = z.object({
   email: z.string().email().optional(),
-  name: z.string().min(2).max(100).optional(),
+  firstname: z.string().min(2).max(100).optional(),
   lastname: z.string().min(2).max(100).optional(),
   city: z.string().min(2).max(50).optional(),
   address: z.string().min(5).max(100).optional(),
   phoneNumber: z.string().min(8).max(16).optional(),
   password: z.string().optional(),
-  role: z.enum(["user", "worker", "manager", "admin"]).optional(),
+  role: z.enum(["klient", "worker", "manager", "admin"]).optional(),
 });
 
 export const registerUserSchema = z.object({
   email: z.string().email(),
-  name: z.string().min(2).max(100).optional(),
+  firstname: z.string().min(2).max(100).optional(),
   lastname: z.string().min(2).max(100).optional(),
   city: z.string().min(2).max(50),
   address: z.string().min(5).max(100),

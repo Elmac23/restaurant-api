@@ -203,6 +203,18 @@
   min-height: 80px;
 }
 
+.image-preview {
+  margin-top: 10px;
+}
+
+.image-preview img {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+  object-fit: cover;
+}
+
 .checkbox-label {
   display: flex !important;
   flex-direction: row !important;

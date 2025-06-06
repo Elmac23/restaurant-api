@@ -38,7 +38,7 @@ export class Authentication {
 
   roleGuard = (role: Role) => {
     return (req: Request, res: Response, next: NextFunction) => {
-      if (ROLES.indexOf(req.user?.role ?? "user") < ROLES.indexOf(role)) {
+      if (ROLES.indexOf(req.user?.role ?? "klient") < ROLES.indexOf(role)) {
         throw new ForbiddenError(`You are not ${role}`);
       }
       next();
@@ -53,14 +53,14 @@ export class Authentication {
   };
 }
 
-export type Role = "user" | "worker" | "manager" | "admin";
-const ROLES = ["user", "worker", "manager", "admin"] as const;
+export type Role = "klient" | "worker" | "manager" | "admin";
+const ROLES = ["klient", "worker", "manager", "admin"] as const;
 
 export type UserPayload = {
   id: string;
   restaurantId?: string;
   email: string;
-  name?: string;
+  firstname?: string;
   role: Role;
   lastname?: string;
   city: string;

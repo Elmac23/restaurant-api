@@ -26,17 +26,27 @@ function AdminOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchOrders();
+    // Dodaj polling co 10 sekund
+    const interval = setInterval(fetchOrders, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   const fetchOrders = async () => {
     try {
       const response = await apiClient.get('/orders');
-      setOrders(response.data);
-    } catch (error) {
-      console.error('Błąd pobierania zamówień:', error);
+      
+      if (Array.isArray(response.data)) {
+        setOrders(response.data);
+      } else {
+        setOrders([]);
+      }
+      setError('');
+    } catch (error: any) {
+      setError(error?.response?.data?.error || error?.message || 'Błąd pobierania zamówień.');
     } finally {
       setLoading(false);
     }
@@ -51,8 +61,10 @@ function AdminOrders() {
     try {
       await apiClient.patch(`/orders/${orderId}`, { status: newStatus });
       await fetchOrders();
-    } catch (error) {
+      setError('');
+    } catch (error: any) {
       console.error('Błąd aktualizacji statusu:', error);
+      setError(error?.response?.data?.error || 'Błąd aktualizacji statusu zamówienia.');
     }
   };
 
@@ -61,7 +73,7 @@ function AdminOrders() {
       pending: 'Oczekujące',
       preparing: 'W przygotowaniu',
       ready: 'Gotowe',
-      delivered: 'Dostarczone',
+      delivered: 'Wysłane',
       cancelled: 'Anulowane'
     };
     return statusLabels[status as keyof typeof statusLabels] || status;
@@ -78,9 +90,10 @@ function AdminOrders() {
     return statusColors[status as keyof typeof statusColors] || '#6c757d';
   };
 
-  const filteredOrders = selectedStatus === 'all' 
+  const filteredOrders = (selectedStatus === 'all' 
     ? orders 
-    : orders.filter(order => order.status === selectedStatus);
+    : orders.filter(order => order.status === selectedStatus)
+  ).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   if (loading) {
     return <div className="loading">Ładowanie zamówień...</div>;
@@ -105,7 +118,7 @@ function AdminOrders() {
               <li><NavLink to="/admin/drinks" className={({ isActive }) => isActive ? 'active' : ''}>Napoje</NavLink></li>
               <li><NavLink to="/admin/users" className={({ isActive }) => isActive ? 'active' : ''}>Użytkownicy</NavLink></li>
               <li><NavLink to="/admin/orders" className={({ isActive }) => isActive ? 'active' : ''}>Zamówienia</NavLink></li>
-              <li><NavLink to="/" className={({ isActive }) => isActive ? 'active' : ''}>Strona główna</NavLink></li>
+              <li><NavLink to="/home" className={({ isActive }) => isActive ? 'active' : ''}>Strona główna</NavLink></li>
             </ul>
           </nav>
         </aside>
@@ -124,7 +137,7 @@ function AdminOrders() {
                 <option value="pending">Oczekujące</option>
                 <option value="preparing">W przygotowaniu</option>
                 <option value="ready">Gotowe</option>
-                <option value="delivered">Dostarczone</option>
+                <option value="delivered">Wysłane</option>
                 <option value="cancelled">Anulowane</option>
               </select>
             </div>
@@ -148,6 +161,8 @@ function AdminOrders() {
               <span className="stat-value">{orders.filter(o => o.status === 'ready').length}</span>
             </div>
           </div>
+
+          {error && <div className="error-message" style={{color: 'red', marginBottom: 16}}>{error}</div>}
 
           <div className="orders-grid">
             {filteredOrders.map((order) => (
@@ -203,7 +218,7 @@ function AdminOrders() {
                       className="btn btn-info"
                       onClick={() => handleStatusChange(order.id, 'delivered')}
                     >
-                      Oznacz jako dostarczone
+                      Oznacz jako wysłane
                     </button>
                   )}
                   {(order.status === 'pending' || order.status === 'preparing') && (

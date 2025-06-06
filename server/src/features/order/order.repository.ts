@@ -22,7 +22,8 @@ export class OrderRepository
 
   async getAll(options: SearchOptions<Order> = {}) {
     const result = await tryOrNull(() => this._db.getData("/orders"));
-    return this.withLimit(result, options.limit, options.page);
+    if (!result) return [];
+    return this.withSearch(result, options);
   }
 
   async create(order: Order) {

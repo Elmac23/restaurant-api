@@ -2,8 +2,11 @@ export interface MenuItem {
   id: string;
   name: string;
   description: string;
-  price: number;
-  kcal: number;
+  price: number | string;
+  kcal: number | string;
+  categoryId?: string;
+  filePath?: string;
+  available?: boolean;
 }
 
 export interface CartItem {
@@ -11,4 +14,5 @@ export interface CartItem {
   name: string;
   price: number;
   quantity: number;
+  type: 'dish' | 'drink';
 }

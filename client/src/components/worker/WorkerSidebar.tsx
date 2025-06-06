@@ -24,7 +24,7 @@ function WorkerSidebar() {
           </li>
           <li>
             <NavLink 
-              to="/" 
+              to="/home" 
               className={({ isActive }) => isActive ? 'active' : ''}
             >
               Strona główna

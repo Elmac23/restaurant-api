@@ -10,23 +10,26 @@ function AdminDashboard() {
   const [stats, setStats] = useState({
     dishes: 0,
     drinks: 0,
-    orders: 0
+    orders: 0,
+    users: 0
   });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [dishes, drinks, orders] = await Promise.all([
+        const [dishes, drinks, orders, users] = await Promise.all([
           apiClient.get('/dishes'),
           apiClient.get('/drinks'),
-          apiClient.get('/orders')
+          apiClient.get('/orders'),
+          apiClient.get('/users')
         ]);
         
         setStats({
           dishes: dishes.data.length,
           drinks: drinks.data.length,
-          orders: orders.data.length
+          orders: orders.data.length,
+          users: users.data.length
         });
       } catch (error) {
         console.error('Błąd pobierania statystyk:', error);
@@ -65,7 +68,8 @@ function AdminDashboard() {
               <li><NavLink to="/admin/dishes" className={({ isActive }) => isActive ? 'active' : ''}>Dania</NavLink></li>
               <li><NavLink to="/admin/drinks" className={({ isActive }) => isActive ? 'active' : ''}>Napoje</NavLink></li>
               <li><NavLink to="/admin/users" className={({ isActive }) => isActive ? 'active' : ''}>Użytkownicy</NavLink></li>
-              <li><NavLink to="/" className={({ isActive }) => isActive ? 'active' : ''}>Strona główna</NavLink></li>
+              <li><NavLink to="/admin/orders" className={({ isActive }) => isActive ? 'active' : ''}>Zamówienia</NavLink></li>
+              <li><NavLink to="/home" className={({ isActive }) => isActive ? 'active' : ''}>Strona główna</NavLink></li>
             </ul>
           </nav>
         </aside>
@@ -95,7 +99,7 @@ function AdminDashboard() {
             
             <div className="stat-card">
               <h3>Użytkownicy</h3>
-              <p className="stat-value">-</p>
+              <p className="stat-value">{stats.users}</p>
               <NavLink to="/admin/users" className="view-link">Zarządzaj użytkownikami</NavLink>
             </div>
           </div>

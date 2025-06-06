@@ -56,7 +56,21 @@ export class DrinkController extends BaseController {
   }
 
   getDrinks = async (req: Request, res: Response) => {
-    const drinks = await this._drinkService.getDrinks(req.query);
+    const { name, category, available } = req.query;
+    let drinks = await this._drinkService.getDrinks(req.query);
+    if (name) {
+      drinks = drinks.filter((d: any) =>
+        d.name.toLowerCase().includes((name as string).toLowerCase())
+      );
+    }
+    if (category) {
+      drinks = drinks.filter((d: any) => d.categoryId === category);
+    }
+    if (available !== undefined) {
+      drinks = drinks.filter(
+        (d: any) => String(d.available) === String(available)
+      );
+    }
     res.status(200).json(drinks);
   };
 
@@ -75,10 +89,9 @@ export class DrinkController extends BaseController {
 
   createDrink = async (req: Request<any, any, CreateDrink>, res: Response) => {
     const file = req.file;
-    const path =
-      (this._config.getValue("HOST_URL") as string) +
-      "/" +
-      (file?.path ?? "public/images/default_drink.png");
+    const path = file 
+      ? `${this._config.getValue("HOST_URL")}/public/images/${file.filename}`
+      : `${this._config.getValue("HOST_URL")}/public/images/default_drink.png`;
     const drink = req.body;
     const result = await this._drinkService.createDrink({
       ...drink,
@@ -96,7 +109,7 @@ export class DrinkController extends BaseController {
     const file = req.file;
     let path: string | undefined = undefined;
     if (file) {
-      path = (this._config.getValue("HOST_URL") as string) + "/" + file?.path;
+      path = `${this._config.getValue("HOST_URL")}/public/images/${file.filename}`;
     }
     const pathObj = path ? { filePath: path } : {};
     const result = await this._drinkService.updateDrink(id, {

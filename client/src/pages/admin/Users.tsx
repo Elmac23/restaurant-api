@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import apiClient from '../../api/client';
+import { getUsersFiltered } from '../../api/services/userService';
 import '../../styles/admin/Users.css';
 
 interface User {
@@ -9,7 +10,7 @@ interface User {
   email: string;
   firstname: string;
   lastname: string;
-  role: 'admin' | 'manager' | 'worker' | 'customer';
+  role: 'admin' | 'manager' | 'worker' | 'klient';
   city: string;
   address: string;
   phoneNumber: string;
@@ -26,21 +27,30 @@ function AdminUsers() {
     email: '',
     firstname: '',
     lastname: '',
-    role: 'customer' as User['role'],
+    role: 'klient' as User['role'],
     city: '',
     address: '',
     phoneNumber: '',
     password: ''
   });
+  const [filters, setFilters] = useState({ email: '', firstname: '', lastname: '', role: '', city: '' });
 
   useEffect(() => {
     fetchUsers();
+  // eslint-disable-next-line
   }, []);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (filterParams = filters) => {
+    setLoading(true);
     try {
-      const response = await apiClient.get('/users');
-      setUsers(response.data);
+      const params: any = {};
+      if (filterParams.email) params.email = filterParams.email;
+      if (filterParams.firstname) params.firstname = filterParams.firstname;
+      if (filterParams.lastname) params.lastname = filterParams.lastname;
+      if (filterParams.role) params.role = filterParams.role;
+      if (filterParams.city) params.city = filterParams.city;
+      const data = await getUsersFiltered(params);
+      setUsers(data);
     } catch (error) {
       console.error('Błąd pobierania użytkowników:', error);
     } finally {
@@ -113,7 +123,7 @@ function AdminUsers() {
       email: '',
       firstname: '',
       lastname: '',
-      role: 'customer',
+      role: 'klient',
       city: '',
       address: '',
       phoneNumber: '',
@@ -128,9 +138,19 @@ function AdminUsers() {
       admin: 'Administrator',
       manager: 'Manager',
       worker: 'Pracownik',
-      customer: 'Klient'
+      klient: 'Klient'
     };
     return roleLabels[role as keyof typeof roleLabels] || role;
+  };
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFilterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchUsers();
   };
 
   if (loading) {
@@ -156,7 +176,7 @@ function AdminUsers() {
               <li><NavLink to="/admin/drinks" className={({ isActive }) => isActive ? 'active' : ''}>Napoje</NavLink></li>
               <li><NavLink to="/admin/users" className={({ isActive }) => isActive ? 'active' : ''}>Użytkownicy</NavLink></li>
               <li><NavLink to="/admin/orders" className={({ isActive }) => isActive ? 'active' : ''}>Zamówienia</NavLink></li>
-              <li><NavLink to="/" className={({ isActive }) => isActive ? 'active' : ''}>Strona główna</NavLink></li>
+              <li><NavLink to="/home" className={({ isActive }) => isActive ? 'active' : ''}>Strona główna</NavLink></li>
             </ul>
           </nav>
         </aside>
@@ -170,6 +190,47 @@ function AdminUsers() {
             >
               {showAddForm ? 'Anuluj' : 'Dodaj użytkownika'}
             </button>
+          </div>
+
+          <div className="filter-bar">
+            <form onSubmit={handleFilterSubmit} className="filter-form">
+              <input
+                type="text"
+                name="email"
+                placeholder="Email"
+                value={filters.email}
+                onChange={handleFilterChange}
+              />
+              <input
+                type="text"
+                name="firstname"
+                placeholder="Imię"
+                value={filters.firstname}
+                onChange={handleFilterChange}
+              />
+              <input
+                type="text"
+                name="lastname"
+                placeholder="Nazwisko"
+                value={filters.lastname}
+                onChange={handleFilterChange}
+              />
+              <input
+                type="text"
+                name="city"
+                placeholder="Miasto"
+                value={filters.city}
+                onChange={handleFilterChange}
+              />
+              <select name="role" value={filters.role} onChange={handleFilterChange}>
+                <option value="">Wszystkie role</option>
+                <option value="klient">Klient</option>
+                <option value="worker">Pracownik</option>
+                <option value="manager">Manager</option>
+                <option value="admin">Administrator</option>
+              </select>
+              <button type="submit" className="btn btn-secondary">Filtruj</button>
+            </form>
           </div>
 
           {showAddForm && (
@@ -195,7 +256,7 @@ function AdminUsers() {
                       onChange={(e) => setFormData({...formData, role: e.target.value as User['role']})}
                       required
                     >
-                      <option value="customer">Klient</option>
+                      <option value="klient">Klient</option>
                       <option value="worker">Pracownik</option>
                       <option value="manager">Manager</option>
                       <option value="admin">Administrator</option>

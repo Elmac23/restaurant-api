@@ -1,15 +1,13 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5050';
-
 const apiClient = axios.create({
-  baseURL: API_URL,
+  baseURL: '/api',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Dodanie interceptora do automatycznego dodawania tokenu autoryzacyjnego
+
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -19,6 +17,16 @@ apiClient.interceptors.request.use(
     return config;
   },
   (error) => Promise.reject(error)
+);
+
+apiClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    console.error('API Error:', error.response?.status, error.response?.data);
+    return Promise.reject(error);
+  }
 );
 
 export default apiClient;

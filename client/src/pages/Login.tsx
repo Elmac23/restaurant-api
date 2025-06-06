@@ -15,38 +15,30 @@ function Login() {
     e.preventDefault();
     setLoading(true);
     setError('');
-    
     try {
       await login(email, password);
-      
-      // Pobierz aktualnego użytkownika z localStorage po zalogowaniu
+      // Przekieruj na odpowiedni panel na podstawie roli
       const token = localStorage.getItem('token');
       if (token) {
-        try {
-          const { jwtDecode } = await import('jwt-decode');
-          const userData = jwtDecode<any>(token);
-          
-          // Przekierowanie do odpowiedniego panelu na podstawie roli
-          switch (userData.role) {
-            case 'admin':
-              navigate('/admin/dashboard');
-              break;
-            case 'manager':
-              navigate('/manager/dashboard');
-              break;
-            case 'worker':
-              navigate('/worker/dashboard');
-              break;
-            default:
-              navigate('/');
-              break;
-          }
-        } catch (decodeError) {
-          console.error('Error decoding token:', decodeError);
-          navigate('/');
+        // Dekoduj token aby sprawdzić rolę
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        const payload = JSON.parse(jsonPayload);
+        
+        if (payload.role === 'admin') {
+          navigate('/home');
+        } else if (payload.role === 'manager') {
+          navigate('/manager/dashboard');
+        } else if (payload.role === 'worker') {
+          navigate('/worker');
+        } else {
+          navigate('/home');
         }
       } else {
-        navigate('/');
+        navigate('/home');
       }
     } catch (err) {
       setError('Nieprawidłowy email lub hasło');
@@ -58,8 +50,8 @@ function Login() {
   return (
     <div className="login-page">
       <div className="login-container">
-        <h1>Panel administracyjny</h1>
-        <p className="login-subtitle">Zaloguj się, aby zarządzać restauracją</p>
+        <h1>Panel logowania</h1>
+        <p className="login-subtitle">Zaloguj się, aby przejść na główną stronę</p>
         
         {error && <div className="error-message">{error}</div>}
         
@@ -96,7 +88,10 @@ function Login() {
         </form>
         
         <div className="back-link">
-          <a href="/">Powrót do strony głównej</a>
+          <a href="/register">Nie masz konta? Zarejestruj się</a>
+        </div>
+        <div className="back-link">
+          <a href="/reset-password">Zapomniałeś hasła? Zresetuj hasło</a>
         </div>
       </div>
     </div>
