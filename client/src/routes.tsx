@@ -1,11 +1,15 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth, type UserRole } from './contexts/AuthContext';
 import type { ReactElement } from 'react';
-
+import Profile from './pages/Profile';
 // Strony publiczne
 import Home from './pages/Home';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
+import ResetPassword from './pages/ResetPassword.tsx'; // NOWE: import strony resetowania hasła
+import Register from './pages/Register'; // NOWE: import strony rejestracji
+import CheckoutPage from './pages/CheckoutPage';
+import OrdersHistoryPage from './pages/OrdersHistoryPage';
 
 // Panele administratora
 import AdminDashboard from './pages/admin/Dashboard';
@@ -34,8 +38,8 @@ const RoleRoute = ({
 }) => {
   const { isAuthenticated, checkRole } = useAuth();
   
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+ if (!isAuthenticated) {
+    return <Navigate to="/" />; // ZMIANA: przekierowanie na logowanie na głównej
   }
   
   if (!checkRole(requiredRole)) {
@@ -47,11 +51,11 @@ const RoleRoute = ({
 
 // Główny komponent tras
 const AppRoutes = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { user } = useAuth();
 
   // Komponent do przekierowania do odpowiedniego dashboardu
   const DashboardRedirect = () => {
-    if (!user) return <Navigate to="/login" />;
+    if (!user) return <Navigate to="/" />; // ZMIANA: przekierowanie na logowanie na głównej
     
     switch (user.role) {
       case 'admin':
@@ -60,19 +64,23 @@ const AppRoutes = () => {
         return <Navigate to="/manager/dashboard" />;
       case 'worker':
         return <Navigate to="/worker/dashboard" />;
+      case 'klient':
+        return <Navigate to="/home" />;
       default:
-        return <Navigate to="/" />;
+        return <Navigate to="/home" />; // ZMIANA: przekierowanie na stronę restauracji
     }
   };
 
   return (
     <Routes>
-      {/* Strony publiczne */}
-      <Route path="/" element={<Home />} />
+      {/* Strona logowania na głównej ścieżce */}
       <Route 
-        path="/login" 
-        element={isAuthenticated ? <DashboardRedirect /> : <Login />} 
+        path="/" 
+        element={<Login />} // ZMIANA: logowanie na głównej
       />
+
+      {/* Strona restauracji (menu) dostępna publicznie */}
+      <Route path="/home" element={<Home />} /> // NOWE
 
       {/* Przekierowanie do odpowiedniego dashboardu */}
       <Route path="/dashboard" element={<DashboardRedirect />} />
@@ -194,6 +202,22 @@ const AppRoutes = () => {
           </RoleRoute>
         } 
       />
+
+      {/* Strona resetowania hasła */}
+      <Route path="/reset-password" element={<ResetPassword />} /> // NOWE
+
+      {/* Strona rejestracji */}
+      <Route path="/register" element={<Register />} /> // NOWE
+
+      {/* Strona podsumowania zamówienia */}
+      <Route path="/checkout" element={<CheckoutPage />} />
+
+      {/* Strona historii zamówień */}
+      <Route path="/orders-history" element={<RoleRoute requiredRole={["klient", "worker", "manager", "admin"]}><OrdersHistoryPage /></RoleRoute>} />
+      <Route path="/orders" element={<RoleRoute requiredRole={["klient", "worker", "manager", "admin"]}><OrdersHistoryPage /></RoleRoute>} />
+
+      {/* Strona profilu użytkownika */}
+      <Route path="/profile" element={<RoleRoute requiredRole={["klient", "worker", "manager", "admin"]}><Profile /></RoleRoute>} />
 
       {/* 404 - strona nie znaleziona */}
       <Route path="*" element={<NotFound />} />
