@@ -13,6 +13,7 @@ import { AppConfig } from "./features/config/appConfig.js";
 import { AuthController } from "./features/auth/auth.controller.js";
 import { Authentication } from "./features/auth/auth.middleware.js";
 import { OrderController } from "./features/order/order.controller.js";
+import { CategoryController } from "./features/category/category.controller.js";
 import { AppDatabase } from "./db/AppDatabase.js";
 import { FileUpload } from "./file-upload/fileUpload.js";
 import { MailSender } from "./features/mail-sender/mailSender.js";
@@ -38,14 +39,19 @@ class Server {
     const userController = container.resolve(UserController);
     const authController = container.resolve(AuthController);
     const orderController = container.resolve(OrderController);
+    const categoryController = container.resolve(CategoryController);
 
     this._server = Express();
+    
+    
     this._server.use(bodyParser.json());
     this._server.use(Express.urlencoded({ extended: true }));
     this._server.use(cors({ origin: "*" }));
 
     this._server.use(logBodyMiddleware);
     this._server.use(authentication.authenticationMiddleware);
+
+    this._server.use("/public", Express.static(config.PUBLIC_PATH));
 
     const masterRouter = Express.Router();
 
@@ -57,6 +63,7 @@ class Server {
     masterRouter.use("/orders", orderController.getRouter());
     masterRouter.use("/users", userController.getRouter());
     masterRouter.use("/auth", authController.getRouter());
+    masterRouter.use("/categories", categoryController.getRouter());
 
     this._server.use("/api", masterRouter);
 

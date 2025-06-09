@@ -55,7 +55,31 @@ export class UserController extends BaseController {
   }
 
   getUsers = async (req: Request, res: Response) => {
-    const users = await this._userService.getUsers(req.query);
+    const { email, firstname, lastname, role, city } = req.query;
+    let users = await this._userService.getUsers(req.query);
+    if (email) {
+      users = users.filter((u: any) =>
+        u.email.toLowerCase().includes((email as string).toLowerCase())
+      );
+    }
+    if (firstname) {
+      users = users.filter((u: any) =>
+        u.firstname.toLowerCase().includes((firstname as string).toLowerCase())
+      );
+    }
+    if (lastname) {
+      users = users.filter((u: any) =>
+        u.lastname.toLowerCase().includes((lastname as string).toLowerCase())
+      );
+    }
+    if (role) {
+      users = users.filter((u: any) => u.role === role);
+    }
+    if (city) {
+      users = users.filter((u: any) =>
+        u.city.toLowerCase().includes((city as string).toLowerCase())
+      );
+    }
     res.status(200).json(users);
   };
 
